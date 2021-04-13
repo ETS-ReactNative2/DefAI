@@ -6,7 +6,7 @@ Tuan Nguyen
 
 ## Topic
 
-This mobile application will take an english word that exists in the dictionary, and produces the definitions and attributes of all the types that word can have as well as pronunciation. In addition, there will also be a place for images and emojis of demonstration, if applicable.
+DefAI takes an english word that exists in the dictionary, and produces the definitions and attributes of all the types that word can have as well as pronunciation. In addition, there will also be a place for images and emojis of demonstration, if applicable.
 
 ## Target
 
