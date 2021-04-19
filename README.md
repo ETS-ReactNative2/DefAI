@@ -12,7 +12,8 @@ DefAI takes an english word that exists in the dictionary, and produces the defi
 
 DefAI will mainly be using OwlBot Dictionary API.<br>
 Check out the [OwlBot Dictionary API](https://owlbot.info/) website for more information.<br>
-The npm package version of the API: [owlbot-js](https://www.npmjs.com/package/owlbot-js)
+The npm package version of the API: [owlbot-js](https://www.npmjs.com/package/owlbot-js)<br>
+Example endpoint to fetch API: [OwlBot API Endpoint](https://owlbot.info/api/v4/dictionary/owl)
 
 ## Target
 
