@@ -1,37 +1,76 @@
 import { StatusBar } from 'expo-status-bar';
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
-import axios from 'axios';
+import { StyleSheet, View } from 'react-native';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
+import { SearchBar, Header, Icon } from 'react-native-elements';
+import Define from './components/Define';
 
 export default function App() {
-  const [result, setResult] = React.useState(null);
-  const token = '3211b416b83aa9ad703f55770604d674e5f06f11';
-
-  const client = axios.create({
-    baseURL: 'https://owlbot.info',
-    timeout: 5000,
-    headers: { Authorization: 'Token ' + token },
-  });
-
-  client.get('/api/v4/dictionary/owl').then((response) => {
-    console.log(response.data);
-    setResult(response.data.definitions[0].definition);
-  });
+  const [isClicked, setIsClicked] = React.useState(false);
+  const [input, setInput] = React.useState('');
+  const [word, setWord] = React.useState('');
+  const [isFocused, setFocused] = React.useState(false);
 
   return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <Text>{result}</Text>
-      <StatusBar style="auto" />
-    </View>
+    <SafeAreaProvider>
+      <View style={styles.container}>
+        <Header
+          leftComponent={
+            <Icon name="camera" type="font-awesome" color="#fff" />
+          }
+          rightComponent={{ icon: 'mic', color: '#fff', size: 30 }}
+          backgroundColor="#b5b3b3"
+          centerComponent={{
+            text: 'DefAI',
+            style: {
+              marginTop: 5,
+              fontSize: 40,
+              color: 'white',
+              alignContent: 'center',
+            },
+          }}
+        />
+        <SearchBar
+          round
+          clearIcon
+          value={input}
+          platform="ios"
+          cancelButtonTitle
+          returnKeyType="search"
+          blurOnSubmit={true}
+          backgroundColor="white"
+          searchIcon={{ size: 24 }}
+          placeholder="Type here an english word..."
+          cancelButtonTitle="Clear"
+          onFocus={() => {
+            setFocused(true);
+            setIsClicked(false);
+          }}
+          onBlur={() => setFocused(false)}
+          onChangeText={(input) => setInput(input)}
+          onSubmitEditing={(e) => {
+            setWord(e.nativeEvent.text);
+            setIsClicked(true);
+          }}
+        />
+        {!isFocused && isClicked ? <Define word={word} /> : null}
+        <StatusBar style="auto" />
+      </View>
+    </SafeAreaProvider>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
+    backgroundColor: '#f8f8f8',
+  },
+  textInputStyle: {
     justifyContent: 'center',
+    height: 40,
+    marginTop: 75,
+    width: 300,
+    marginLeft: 30,
+    alignContent: 'center',
   },
 });
