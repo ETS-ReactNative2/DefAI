@@ -1,18 +1,22 @@
 import React from 'react';
 import { View, Text, FlatList, StyleSheet } from 'react-native';
 import axios from 'axios';
+import { Image } from 'react-native-elements';
+// import { REACT_NATIVE_OWLBOT, REACT_NATIVE_UNSPLASH } from 'inline-dotenv';
 
 export default function Define(props) {
-  const token = '3211b416b83aa9ad703f55770604d674e5f06f11';
+  const owlbotToken = process.env.REACT_NATIVE_OWLBOT;
+  const unsplashToken = process.env.REACT_NATIVE_UNSPLASH;
   const [error, setError] = React.useState(false);
   const [toggle, setToggle] = React.useState(false);
   const [defInfo, setDefInfo] = React.useState([]);
+  const [photo, setPhoto] = React.useState(null);
 
   const client = axios.create({
     baseURL: 'https://owlbot.info',
     timeout: 3000,
     headers: {
-      Authorization: 'Token ' + token,
+      Authorization: 'Token ' + owlbotToken,
       'Content-Type': 'application/json',
     },
   });
@@ -30,6 +34,14 @@ export default function Define(props) {
   };
 
   React.useEffect(() => {
+    axios
+      .get(
+        `https://api.unsplash.com/search/photos?query=${props.word}&client_id=${unsplashToken}`
+      )
+      .then((res) => setPhoto(res.data.results[0].urls.small));
+  });
+
+  React.useEffect(() => {
     fetchData();
     return () => {
       return null;
@@ -43,10 +55,18 @@ export default function Define(props) {
         {defInfo.pronunciation ? (
           <Text style={styles.pronunciation}>/{defInfo.pronunciation}/</Text>
         ) : null}
+        {photo ? (
+          <Text style={{ marginTop: 14, fontSize: 18 }}>
+            <Image
+              source={{ uri: photo }}
+              style={{ width: 200, height: 200 }}
+            />
+          </Text>
+        ) : null}
         <Text />
         <FlatList
           data={defInfo.definitions}
-          keyExtractor={(item) => item.definition}
+          keyExtractor={(item) => item.definition + Math.random().toString()}
           renderItem={({ item }) => (
             <View style={styles.listItem}>
               <Text style={styles.listItemText}>
