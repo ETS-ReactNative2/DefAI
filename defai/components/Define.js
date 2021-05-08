@@ -2,7 +2,6 @@ import React from 'react';
 import { View, Text, FlatList, StyleSheet } from 'react-native';
 import axios from 'axios';
 import { Image } from 'react-native-elements';
-// import { REACT_NATIVE_OWLBOT, REACT_NATIVE_UNSPLASH } from 'inline-dotenv';
 
 export default function Define(props) {
   const owlbotToken = process.env.REACT_NATIVE_OWLBOT;
@@ -28,9 +27,7 @@ export default function Define(props) {
         setDefInfo(res.data);
         setToggle(true);
       })
-      .catch(() => {
-        setError(true);
-      });
+      .catch(() => setError(true));
   };
 
   React.useEffect(() => {

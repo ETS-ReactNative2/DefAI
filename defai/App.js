@@ -16,14 +16,24 @@ export default function App() {
       <View style={styles.container}>
         <Header
           leftComponent={
-            <Icon name="camera" type="font-awesome" color="#fff" />
+            <Icon
+              name="camera"
+              type="font-awesome"
+              color="#fff"
+              style={{ marginTop: 16 }}
+            />
           }
-          rightComponent={{ icon: 'mic', color: '#fff', size: 30 }}
+          rightComponent={{
+            icon: 'mic',
+            color: '#fff',
+            size: 30,
+            marginTop: 12,
+          }}
           backgroundColor="#b5b3b3"
           centerComponent={{
             text: 'DefAI',
             style: {
-              marginTop: 5,
+              marginTop: 3,
               fontSize: 40,
               color: 'white',
               alignContent: 'center',
