@@ -12,7 +12,7 @@ export default function ReadAndDefine(props) {
         `https://api.ocr.space/parse/imageurl?apikey=${ocrSpaceToken}&url=${props.imageURL}&language=eng`
       )
       .then((res) => console.log(res.data));
-  }, [imageURL]);
+  }, [props.imageURL]);
 
   return (
     <View>
