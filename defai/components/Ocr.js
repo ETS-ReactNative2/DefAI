@@ -1,55 +1,74 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Button, View, Platform, StyleSheet } from 'react-native';
-import axios from 'axios';
-import { SafeAreaProvider } from 'react-native-safe-area-context';
-import { SearchBar } from 'react-native-elements';
 import { StatusBar } from 'expo-status-bar';
-import * as WebBrowser from 'expo-web-browser';
 import ReadAndDefine from './ReadAndDefine';
+import * as ImagePicker from 'expo-image-picker';
+import * as FileSystem from 'expo-file-system';
 
 export default function URLConverter() {
   const [isClicked, setIsClicked] = React.useState(false);
-  const [input, setInput] = React.useState('');
-  const [isFocused, setFocused] = React.useState(false);
-  const [url, setUrl] = React.useState(null);
+  const [encodeBase64, setEncodeBase64] = React.useState(null);
+  const [isFocused, setIsFocused] = React.useState(false);
 
-  const pickAndConvertImage = async () => {
-    WebBrowser.openBrowserAsync('https://postimg.cc/');
+  React.useEffect(() => {
+    (async () => {
+      if (Platform.OS !== 'web') {
+        const { status } =
+          await ImagePicker.requestMediaLibraryPermissionsAsync();
+        if (status !== 'granted') {
+          alert('Sorry, we need camera roll permissions to make this work!');
+        }
+      }
+    })();
+  }, []);
+
+  const pickImage = async () => {
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.All,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+    });
+
+    if (!result.cancelled) {
+      return result.uri;
+    }
+  };
+
+  const convertImage = async (imageURI) => {
+    const convertedBase64 = await FileSystem.readAsStringAsync(imageURI, {
+      encoding: 'base64',
+    });
+    setEncodeBase64(convertedBase64);
+  };
+
+  const pickAndConvert = async () => {
+    pickImage().then((uri) => {
+      convertImage(uri);
+      setIsFocused(true);
+      setIsClicked(false);
+    });
   };
 
   return (
-    <SafeAreaProvider>
-      <View style={styles.container}>
-        <SearchBar
-          round
-          clearIcon
-          value={input}
-          platform="ios"
-          cancelButtonTitle
-          returnKeyType="search"
-          blurOnSubmit={true}
-          backgroundColor="white"
-          searchIcon={{ size: 24 }}
-          placeholder="Paste here the image Url..."
-          cancelButtonTitle="Clear"
-          onFocus={() => {
-            setFocused(true);
-            setIsClicked(false);
-          }}
-          onBlur={() => setFocused(false)}
-          onChangeText={(input) => setInput(input)}
-          onSubmitEditing={(e) => {
-            setUrl(e.nativeEvent.text);
-            setIsClicked(true);
-          }}
-        />
-        {!isFocused ? (
-          <Button title="Convert image to URL" onPress={pickAndConvertImage} />
-        ) : null}
-        {!isFocused && isClicked ? <ReadAndDefine imageURL={url} /> : null}
-        <StatusBar style="auto" />
-      </View>
-    </SafeAreaProvider>
+    <View style={styles.container}>
+      <Button title="Convert image to URL" onPress={pickAndConvert} />
+      <Button
+        title="Define"
+        onPress={() => {
+          setIsClicked(true);
+          setIsFocused(false);
+        }}
+      />
+      {/* <Button
+        title="Clear image definition"
+        onPress={() => setIsClicked(false)}
+      /> */}
+      {!isFocused && isClicked ? (
+        <ReadAndDefine base64image={encodeBase64} />
+      ) : null}
+      <StatusBar style="auto" />
+    </View>
   );
 }
 

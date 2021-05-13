@@ -1,22 +1,40 @@
 import React from 'react';
-import { View, Text } from 'react-native';
 import Define from './Define';
 
 export default function ReadAndDefine(props) {
-  const ocrSpaceToken = process.env.REACT_NATIVE_OCRSPACE;
+  const googleAPI = process.env.REACT_NATIVE_GOOGLE;
+  const base64Img = props.base64image;
   const [word, setWord] = React.useState(null);
 
-  React.useEffect(() => {
-    axios
-      .get(
-        `https://api.ocr.space/parse/imageurl?apikey=${ocrSpaceToken}&url=${props.imageURL}&language=eng`
-      )
-      .then((res) => console.log(res.data));
-  }, [props.imageURL]);
+  const extractImage = async () => {
+    let googleVisionRes = await fetch(
+      'https://vision.googleapis.com/v1/images:annotate?key=' + googleAPI,
+      {
+        method: 'POST',
+        body: JSON.stringify({
+          requests: [
+            {
+              image: {
+                content: base64Img,
+              },
+              features: [{ type: 'TEXT_DETECTION', maxResults: 5 }],
+            },
+          ],
+        }),
+      }
+    );
+    await googleVisionRes.json().then((res) => {
+      try {
+        setWord(res.responses[0].textAnnotations[1].description);
+      } catch (e) {
+        setWord('');
+      }
+    });
+  };
 
-  return (
-    <View>
-      <Text>Hello</Text>
-    </View>
-  );
+  React.useEffect(() => {
+    extractImage();
+  }, [props.base64image]);
+
+  return <Define word={word} />;
 }
