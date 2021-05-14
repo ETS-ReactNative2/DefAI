@@ -10,6 +10,7 @@ export default function URLConverter() {
   const [encodeBase64, setEncodeBase64] = React.useState(null);
   const [isFocused, setIsFocused] = React.useState(false);
 
+  // Request permissions from user
   React.useEffect(() => {
     (async () => {
       if (Platform.OS !== 'web') {
@@ -22,6 +23,7 @@ export default function URLConverter() {
     })();
   }, []);
 
+  // Pick an image from the library
   const pickImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.All,
@@ -35,6 +37,7 @@ export default function URLConverter() {
     }
   };
 
+  // Convert the image uri to base64
   const convertImage = async (imageURI) => {
     const convertedBase64 = await FileSystem.readAsStringAsync(imageURI, {
       encoding: 'base64',
@@ -60,10 +63,6 @@ export default function URLConverter() {
           setIsFocused(false);
         }}
       />
-      {/* <Button
-        title="Clear image definition"
-        onPress={() => setIsClicked(false)}
-      /> */}
       {!isFocused && isClicked ? (
         <ReadAndDefine base64image={encodeBase64} />
       ) : null}

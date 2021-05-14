@@ -7,6 +7,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { Header } from 'react-native-elements';
 
 export default function App() {
+  // inintialize a BottomTabNavigator instance
   const Tab = createBottomTabNavigator();
 
   return (
@@ -28,6 +29,7 @@ export default function App() {
           tabBarIcon: ({ color, size }) => {
             let iconName;
 
+            // Render icon for each tab
             if (route.name === 'Search') {
               iconName = 'search-outline';
             } else if (route.name === 'OCR') {
@@ -39,7 +41,9 @@ export default function App() {
           },
         })}
         tabBarOptions={{
+          // if chosen
           activeTintColor: 'tomato',
+          // otherwise
           inactiveTintColor: 'gray',
         }}
       >

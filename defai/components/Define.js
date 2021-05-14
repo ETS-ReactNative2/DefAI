@@ -11,6 +11,7 @@ export default function Define(props) {
   const [defInfo, setDefInfo] = React.useState([]);
   const [photo, setPhoto] = React.useState(null);
 
+  // Initialize an axios instance
   const client = axios.create({
     baseURL: 'https://owlbot.info',
     timeout: 3000,
@@ -20,6 +21,7 @@ export default function Define(props) {
     },
   });
 
+  // Function to call Owlbow API to get definitions
   const fetchData = async () => {
     client
       .get(`/api/v4/dictionary/${props.word}`)
@@ -30,14 +32,20 @@ export default function Define(props) {
       .catch(() => setError(true));
   };
 
+  // Calling Unsplash API to get photos
   React.useEffect(() => {
     axios
       .get(
         `https://api.unsplash.com/search/photos?query=${props.word}&client_id=${unsplashToken}`
       )
-      .then((res) => setPhoto(res.data.results[0].urls.small));
+      .then((res) => {
+        try {
+          setPhoto(res.data.results[0].urls.small);
+        } catch (e) {}
+      });
   });
 
+  // Calling the Owlbow API
   React.useEffect(() => {
     fetchData();
     return () => {
