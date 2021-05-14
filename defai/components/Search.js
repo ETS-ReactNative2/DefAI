@@ -1,6 +1,6 @@
 import { StatusBar } from 'expo-status-bar';
 import React from 'react';
-import { StyleSheet, View, Dimensions } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { SearchBar } from 'react-native-elements';
 import Define from './Define';
@@ -10,10 +10,6 @@ export default function App() {
   const [input, setInput] = React.useState('');
   const [word, setWord] = React.useState('');
   const [isFocused, setFocused] = React.useState(false);
-
-  const screenWidth = Dimensions.get('screen').width;
-  const screenHeight = Dimensions.get('screen').height;
-  console.log(screenWidth, screenHeight);
 
   return (
     <SafeAreaProvider>

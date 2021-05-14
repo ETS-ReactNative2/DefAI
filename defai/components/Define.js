@@ -21,7 +21,7 @@ export default function Define(props) {
     },
   });
 
-  // Function to call Owlbow API to get definitions
+  // Function to call Owlbot API to get definitions
   const fetchData = async () => {
     client
       .get(`/api/v4/dictionary/${props.word}`)

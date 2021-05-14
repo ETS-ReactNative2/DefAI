@@ -55,7 +55,7 @@ export default function URLConverter() {
 
   return (
     <View style={styles.container}>
-      <Button title="Convert image to URL" onPress={pickAndConvert} />
+      <Button title="Upload image here" onPress={pickAndConvert} />
       <Button
         title="Define"
         onPress={() => {
